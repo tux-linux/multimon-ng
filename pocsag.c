@@ -599,26 +599,28 @@ static void pocsag_printmessage(struct demod_state *s, bool sync)
 
             if((pocsag_mode == POCSAG_MODE_ALPHA) || ((pocsag_mode == POCSAG_MODE_STANDARD) && (func != 0)) || ((pocsag_mode == POCSAG_MODE_AUTO) && (guess_alpha >= guess_skyper || unsure)))
             {
+                char * alpha_string_stripped = alpha_string+1;
+                alpha_string_stripped[strlen(alpha_string_stripped)-1] = '\0';
                 if(pocsag_mode == POCSAG_MODE_AUTO)
                     verbprintf(3, "Certainty: %5i  ", guess_alpha);
-                if(isdigit(alpha_string)) {
+                if(isdigit(alpha_string_stripped)) {
                     FILE * fptr;
                     fptr = fopen("../scripts/client/iterations_total", "w");
                     if(fptr == NULL)
                         fprintf(stderr, "Error writing to iterations_total file.\n");
-                    fprintf(fptr, alpha_string);
+                    fprintf(fptr, alpha_string_stripped);
                     fclose(fptr);
                 }
-                else if(strcmp(alpha_string,"==%%END%%==") == 0) {
+                else if(strcmp(alpha_string_stripped, "==END==") == 0) {
                     FILE * fptr;
                     fptr = fopen("../scripts/client/send_done", "w");
                     if(fptr == NULL)
                         fprintf(stderr, "Error writing to send_done file.\n");
-                    fprintf(fptr, alpha_string);
+                    fprintf(fptr, alpha_string_stripped);
                     fclose(fptr);
                 }
                 else {
-                    verbprintf(0, "%s", alpha_string);
+                    verbprintf(0, "%s", alpha_string_stripped);
                 }
                 if(!sync) verbprintf(2,"<LOST SYNC>");
             }
