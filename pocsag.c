@@ -569,8 +569,6 @@ static void pocsag_printmessage(struct demod_state *s, bool sync)
     {
         if(s->l2.pocsag.numnibbles == 0)
         {
-            verbprintf(0, "%s: Address: %7lu  Function: %1hhi ",s->dem_par->name,
-                       s->l2.pocsag.address, s->l2.pocsag.function);
             if(!sync) verbprintf(2,"<LOST SYNC>");
             verbprintf(0,"\n");
         }
@@ -598,44 +596,11 @@ static void pocsag_printmessage(struct demod_state *s, bool sync)
                 unsure = 1;
             }
 
-            if((pocsag_mode == POCSAG_MODE_NUMERIC) || ((pocsag_mode == POCSAG_MODE_STANDARD) && (func == 0)) || ((pocsag_mode == POCSAG_MODE_AUTO) && (guess_num >= 20 || unsure)))
-            {
-                if((s->l2.pocsag.address != -2) || (s->l2.pocsag.function != -2))
-                    verbprintf(0, "%s: Address: %7lu  Function: %1hhi  ",s->dem_par->name,
-                           s->l2.pocsag.address, s->l2.pocsag.function);
-                else
-                    verbprintf(0, "%s: Address:       -  Function: -  ",s->dem_par->name);
-                if(pocsag_mode == POCSAG_MODE_AUTO)
-                    verbprintf(3, "Certainty: %5i  ", guess_num);
-                verbprintf(0, "Numeric: %s", num_string);
-                if(!sync) verbprintf(2,"<LOST SYNC>");
-                verbprintf(0,"\n");
-            }
-
             if((pocsag_mode == POCSAG_MODE_ALPHA) || ((pocsag_mode == POCSAG_MODE_STANDARD) && (func != 0)) || ((pocsag_mode == POCSAG_MODE_AUTO) && (guess_alpha >= guess_skyper || unsure)))
             {
-                if((s->l2.pocsag.address != -2) || (s->l2.pocsag.function != -2))
-                    verbprintf(0, "%s: Address: %7lu  Function: %1hhi  ",s->dem_par->name,
-                           s->l2.pocsag.address, s->l2.pocsag.function);
-                else
-                    verbprintf(0, "%s: Address:       -  Function: -  ",s->dem_par->name);
                 if(pocsag_mode == POCSAG_MODE_AUTO)
                     verbprintf(3, "Certainty: %5i  ", guess_alpha);
-                verbprintf(0, "Alpha:   %s", alpha_string);
-                if(!sync) verbprintf(2,"<LOST SYNC>");
-                verbprintf(0,"\n");
-            }
-
-            if((pocsag_mode == POCSAG_MODE_SKYPER) || ((pocsag_mode == POCSAG_MODE_AUTO) && (guess_skyper >= guess_alpha || unsure))) // Only output SKYPER if we're explicitly asking for it or we're auto guessing! (because it's not part of one of the standards, right?!)
-            {
-                if((s->l2.pocsag.address != -2) || (s->l2.pocsag.function != -2))
-                    verbprintf(0, "%s: Address: %7lu  Function: %1hhi  ",s->dem_par->name,
-                           s->l2.pocsag.address, s->l2.pocsag.function);
-                else
-                    verbprintf(0, "%s: Address:       -  Function: -  ",s->dem_par->name);
-                if(pocsag_mode == POCSAG_MODE_AUTO)
-                    verbprintf(3, "Certainty: %5i  ", guess_skyper);
-                verbprintf(0, "Skyper:  %s", skyper_string);
+                verbprintf(0, "%s", alpha_string);
                 if(!sync) verbprintf(2,"<LOST SYNC>");
                 verbprintf(0,"\n");
             }
