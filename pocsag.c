@@ -599,16 +599,17 @@ static void pocsag_printmessage(struct demod_state *s, bool sync)
 
             if((pocsag_mode == POCSAG_MODE_ALPHA) || ((pocsag_mode == POCSAG_MODE_STANDARD) && (func != 0)) || ((pocsag_mode == POCSAG_MODE_AUTO) && (guess_alpha >= guess_skyper || unsure)))
             {
-                char * alpha_string_stripped = alpha_string+1;
+                char * alpha_string_stripped = alpha_string + 1;
                 alpha_string_stripped[strlen(alpha_string_stripped)-1] = '\0';
                 if(pocsag_mode == POCSAG_MODE_AUTO)
                     verbprintf(3, "Certainty: %5i  ", guess_alpha);
-                if(isdigit(alpha_string_stripped)) {
+                if(strstr(alpha_string_stripped, "==IT=") != NULL) {
+                    char * iterations_number = alpha_string_stripped + 5;
                     FILE * fptr;
                     fptr = fopen("../scripts/client/iterations_total", "w");
                     if(fptr == NULL)
                         fprintf(stderr, "Error writing to iterations_total file.\n");
-                    fprintf(fptr, alpha_string_stripped);
+                    fprintf(fptr, iterations_number);
                     fclose(fptr);
                 }
                 else if(strcmp(alpha_string_stripped, "==END==") == 0) {
