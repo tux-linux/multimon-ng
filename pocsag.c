@@ -127,7 +127,7 @@ static unsigned int pocsag_syndrome(uint32_t data)
 /* ---------------------------------------------------------------------- */
 	// ISO 646 national variant: US / IRV (1991)
     char *trtab[128] = {
-			"<NUL>", 	//  0x0
+			"",	 	//  0x0
 			"<SOH>", 	//  0x1
 			"<STX>", 	//  0x2
 			"<ETX>", 	//  0x3
