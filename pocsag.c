@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 /* ---------------------------------------------------------------------- */
 
@@ -600,7 +601,25 @@ static void pocsag_printmessage(struct demod_state *s, bool sync)
             {
                 if(pocsag_mode == POCSAG_MODE_AUTO)
                     verbprintf(3, "Certainty: %5i  ", guess_alpha);
-                verbprintf(0, "%s", alpha_string);
+                if(isdigit(alpha_string)) {
+                    FILE * fptr;
+                    fptr = fopen("../scripts/client/iterations_total", "w");
+                    if(fptr == NULL)
+                        fprintf(stderr, "Error writing to iterations_total file.\n");
+                    fprintf(fptr, alpha_string);
+                    fclose(fptr);
+                }
+                else if(strcmp(alpha_string,"==%%END%%==") == 0) {
+                    FILE * fptr;
+                    fptr = fopen("../scripts/client/send_done", "w");
+                    if(fptr == NULL)
+                        fprintf(stderr, "Error writing to send_done file.\n");
+                    fprintf(fptr, alpha_string);
+                    fclose(fptr);
+                }
+                else {
+                    verbprintf(0, "%s", alpha_string);
+                }
                 if(!sync) verbprintf(2,"<LOST SYNC>");
             }
         }
